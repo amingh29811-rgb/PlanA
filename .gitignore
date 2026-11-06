@@ -1,0 +1,22 @@
+# پایتون
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+
+# Django
+db.sqlite3
+*.db
+media/
+private_files/
+staticfiles/
+
+# اسرار و تنظیمات محلی
+.env
+.env.*
+
+# ادیتور و سیستم‌عامل
+.vscode/
+.idea/
+.DS_Store

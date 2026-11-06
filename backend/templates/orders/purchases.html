@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}خریدهای من | Plan A{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">خریدهای من</h1>
+
+    {% if items %}
+      <table class="cart-table">
+        <thead>
+          <tr><th>محصول</th><th>قیمت پرداختی</th><th>تاریخ</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.price_at_purchase|intcomma }} تومان</td>
+            <td>{{ item.order.paid_at|date:"Y/m/d" }}</td>
+            <td><a class="btn btn-small" href="{% url 'orders:download' item.product.id %}">دانلود</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>هنوز خریدی انجام نداده‌اید.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

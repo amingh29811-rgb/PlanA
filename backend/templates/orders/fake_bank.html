@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}درگاه آزمایشی{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container auth-box">
+    <h1>درگاه پرداخت (آزمایشی)</h1>
+    <div class="message">این صفحه شبیه‌ساز بانک است و فقط در حالت توسعه وجود دارد.</div>
+
+    <p>مبلغ قابل پرداخت: <strong>{{ payment.amount|intcomma }} تومان</strong></p>
+    <p>شناسه تراکنش: {{ payment.authority }}</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" name="action" value="pay" class="btn btn-block">پرداخت موفق</button>
+      <p style="text-align:center; margin-top:12px;">
+        <button type="submit" name="action" value="cancel" class="link-button">انصراف</button>
+      </p>
+    </form>
+  </div>
+</section>
+{% endblock %}

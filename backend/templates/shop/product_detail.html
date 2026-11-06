@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}{{ product.name }} | Plan A{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <article class="product-detail"
+             data-id="{{ product.id }}"
+             data-name="{{ product.name }}"
+             data-price="{{ product.price }}">
+
+      <div class="product-detail-image">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <img src="{% static 'images/placeholder.svg' %}" alt="{{ product.name }}">
+        {% endif %}
+      </div>
+
+      <div class="product-detail-info">
+        <span class="product-type">{{ product.get_product_type_display }}</span>
+        <h1>{{ product.name }}</h1>
+        <p class="product-price">{{ product.price|intcomma }} تومان</p>
+        <p>{{ product.description|linebreaksbr }}</p>
+        <button class="btn add-to-cart">افزودن به سبد</button>
+      </div>
+    </article>
+  </div>
+</section>
+{% endblock %}

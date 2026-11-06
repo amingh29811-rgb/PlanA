@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}ورود | Plan A{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container auth-box">
+    <h1>ورود به حساب</h1>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      {% include "accounts/_form_fields.html" %}
+      <button type="submit" class="btn btn-block">ورود</button>
+    </form>
+
+    <p class="auth-switch">حساب ندارید؟ <a href="{% url 'accounts:register' %}">ثبت‌نام</a></p>
+  </div>
+</section>
+{% endblock %}

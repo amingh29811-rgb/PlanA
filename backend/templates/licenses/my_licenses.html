@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}لایسنس‌های من | Plan A{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">لایسنس‌های من</h1>
+
+    {% if licenses %}
+      <table class="cart-table">
+        <thead>
+          <tr><th>محصول</th><th>کلید لایسنس</th><th>دامنه‌ها</th><th>به‌روزرسانی تا</th></tr>
+        </thead>
+        <tbody>
+          {% for license in licenses %}
+          <tr>
+            <td>{{ license.product.name }}</td>
+            <td><code class="license-key">{{ license.key }}</code></td>
+            <td>
+              {{ license.activations.all|length }} از {{ license.max_activations }}
+              {% for activation in license.activations.all %}
+                <div class="form-help">{{ activation.domain }}</div>
+              {% endfor %}
+            </td>
+            <td>{{ license.expires_at|date:"Y/m/d" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>هنوز لایسنسی ندارید.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,62 @@
+import secrets
+from django.db import models
+from orders.models import Order
+from licenses.services import issue_licenses
+
+for order in Order.objects.filter(status="paid"):
+    issue_licenses(order)
+
+
+def generate_license_key():
+    raw = secrets.token_hex(12).upper()  # ۹۶ بیت تصادفی
+    return "PLANA-" + "-".join(raw[i:i + 6] for i in range(0, 24, 6))
+
+
+class License(models.Model):
+    class Status(models.TextChoices):
+        ACTIVE = "active", "فعال"
+        REVOKED = "revoked", "لغو شده"
+
+    key = models.CharField(
+        "کلید", max_length=40, unique=True,
+        default=generate_license_key, editable=False,
+    )
+    order_item = models.OneToOneField(
+        "orders.OrderItem", on_delete=models.PROTECT, related_name="license"
+    )
+    product = models.ForeignKey(
+        "shop.Product", on_delete=models.PROTECT, related_name="licenses"
+    )
+    status = models.CharField(
+        "وضعیت", max_length=10, choices=Status.choices, default=Status.ACTIVE
+    )
+    max_activations = models.PositiveSmallIntegerField("حداکثر دامنه", default=1)
+    expires_at = models.DateTimeField("پایان به‌روزرسانی و پشتیبانی")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "لایسنس"
+        verbose_name_plural = "لایسنس‌ها"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.key
+
+
+class Activation(models.Model):
+    license = models.ForeignKey(
+        License, on_delete=models.CASCADE, related_name="activations"
+    )
+    domain = models.CharField("دامنه", max_length=255)
+    activated_at = models.DateTimeField(auto_now_add=True)
+    last_check_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["license", "domain"], name="unique_domain_per_license"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.domain} ← {self.license.key}"

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}پرداخت | Plan A{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container auth-box">
+    <h1>پرداخت سفارش #{{ order.id }}</h1>
+
+    <ul class="pay-list">
+      {% for item in order.items.all %}
+        <li>{{ item.product.name }} <span>{{ item.price_at_purchase|intcomma }} تومان</span></li>
+      {% endfor %}
+    </ul>
+
+    <p>جمع کل: <strong>{{ order.total|intcomma }} تومان</strong></p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-block">پرداخت و انتقال به درگاه</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

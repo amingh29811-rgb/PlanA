@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block content %}
+
+<section class="section hero">
+  <div class="container">
+    <h1>قالب و افزونه‌ی مینیمال برای وردپرس</h1>
+    <p>سریع، سبک و قابل‌اعتماد؛ برای سایتی که می‌خواهید بسازید.</p>
+    <a href="#products" class="btn">مشاهده محصولات</a>
+  </div>
+</section>
+
+<section class="section products" id="products">
+  <div class="container">
+    <h2 class="section-title">پرفروش‌ترین‌ها</h2>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">همه</button>
+      <button class="filter-btn" data-filter="theme">قالب‌ها</button>
+      <button class="filter-btn" data-filter="plugin">افزونه‌ها</button>
+    </div>
+
+    <div class="product-grid">
+      {% for product in products %}
+      <article class="product-card"
+               data-id="{{ product.id }}"
+               data-type="{{ product.product_type }}"
+               data-name="{{ product.name }}"
+               data-price="{{ product.price }}">
+
+        <a href="{% url 'shop:product_detail' product.slug %}">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <img src="{% static 'images/placeholder.svg' %}" alt="{{ product.name }}">
+          {% endif %}
+        </a>
+
+        <div class="product-body">
+          <span class="product-type">{{ product.get_product_type_display }}</span>
+          <h3><a href="{% url 'shop:product_detail' product.slug %}">{{ product.name }}</a></h3>
+          <p class="product-price">{{ product.price|intcomma }} تومان</p>
+          <button class="btn add-to-cart">افزودن به سبد</button>
+        </div>
+      </article>
+      {% empty %}
+        <p>هنوز محصولی ثبت نشده است.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section features">
+  <div class="container">
+    <h2 class="section-title">چرا Plan A؟</h2>
+    <ul>
+      <li>به‌روزرسانی رایگان یک‌ساله</li>
+      <li>پشتیبانی فنی</li>
+      <li>کد تمیز و سریع</li>
+    </ul>
+  </div>
+</section>
+
+{% endblock %}

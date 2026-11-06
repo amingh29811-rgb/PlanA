@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}سبد خرید | Plan A{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">سبد خرید</h1>
+
+    {% if products %}
+      <table class="cart-table">
+        <thead>
+          <tr><th>محصول</th><th>قیمت</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr>
+            <td><a href="{% url 'shop:product_detail' product.slug %}">{{ product.name }}</a></td>
+            <td>{{ product.price|intcomma }} تومان</td>
+            <td>
+              <form method="post" action="{% url 'orders:cart_remove' product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="link-button">حذف</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>جمع کل</td>
+            <td colspan="2"><strong>{{ total|intcomma }} تومان</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'orders:checkout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn">ادامه و پرداخت</button>
+        </form>
+      {% else %}
+        <p>
+          برای ادامه
+          <a href="{% url 'accounts:login' %}?next={% url 'orders:cart' %}">وارد شوید</a>
+          یا <a href="{% url 'accounts:register' %}">ثبت‌نام کنید</a>.
+        </p>
+      {% endif %}
+    {% else %}
+      <p>سبد خرید شما خالی است.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
